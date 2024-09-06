@@ -2,6 +2,7 @@ import { userModel } from "../Models/userModel.js"
 import bcryptjs from 'bcryptjs'
 import { verificationCode } from "../utils/generateVerificationCode.js"
 import { generateTokenAndSetCookies } from "../utils/generateTokenAndSetCookies.js"
+import { sendVerificationEmail } from "../utils/Mailtrap/email.js"
 
 export const signUpController = async(req,res)=>{
     try {
@@ -48,6 +49,9 @@ export const signUpController = async(req,res)=>{
 
         //JWTTOKEN
         generateTokenAndSetCookies(res,user._id)
+
+        //SEND EMAIL
+        await sendVerificationEmail(user.email, verificationToken)
 
         //MESSAGE OF CREATION
         res.status(201).send(
